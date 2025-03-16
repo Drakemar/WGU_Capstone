@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stroke Prediction</title>
+    <script>
+        async function predictStroke() {
+            const formData = {
+                age: parseFloat(document.getElementById("age").value),
+                hypertension: parseInt(document.getElementById("hypertension").value),
+                heart_disease: parseInt(document.getElementById("heart_disease").value),
+                avg_glucose_level: parseFloat(document.getElementById("avg_glucose_level").value),
+                bmi: parseFloat(document.getElementById("bmi").value),
+                smoking_status: parseInt(document.getElementById("smoking_status").value),
+                ever_married: parseInt(document.getElementById("ever_married").value),
+                gender_male: parseInt(document.getElementById("gender_male").value),
+                work_type_private: parseInt(document.getElementById("work_type_private").value),
+                work_type_self_employed: parseInt(document.getElementById("work_type_self_employed").value),
+                work_type_children: parseInt(document.getElementById("work_type_children").value),
+                residence_type_urban: parseInt(document.getElementById("residence_type_urban").value),
+                bmi_category_1: parseInt(document.getElementById("bmi_category_1").value),
+                bmi_category_2: parseInt(document.getElementById("bmi_category_2").value),
+                bmi_category_3: parseInt(document.getElementById("bmi_category_3").value),
+                age_group_1: parseInt(document.getElementById("age_group_1").value),
+                age_group_2: parseInt(document.getElementById("age_group_2").value),
+                age_group_3: parseInt(document.getElementById("age_group_3").value)
+            };
+
+            const response = await fetch("http://localhost:8000/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+            document.getElementById("result").innerHTML = `
+                <h3>Stroke Prediction: ${result.stroke_prediction ? "High Risk" : "Low Risk"}</h3>
+                <p>Probability: ${result.probability}%</p>
+            `;
+        }
+    </script>
+</head>
+<body>
+    <h2>Stroke Prediction System</h2>
+    <form onsubmit="event.preventDefault(); predictStroke();">
+        <label>Age: <input type="number" id="age" required></label><br>
+        <label>Hypertension (0/1): <input type="number" id="hypertension" required></label><br>
+        <label>Heart Disease (0/1): <input type="number" id="heart_disease" required></label><br>
+        <label>Average Glucose Level: <input type="number" id="avg_glucose_level" required></label><br>
+        <label>BMI: <input type="number" id="bmi" required></label><br>
+        <label>Smoking Status (0=Never, 1=Former, 2=Current): <input type="number" id="smoking_status" required></label><br>
+        <label>Ever Married (0/1): <input type="number" id="ever_married" required></label><br>
+        <label>Gender Male (0/1): <input type="number" id="gender_male" required></label><br>
+        <label>Work Type Private (0/1): <input type="number" id="work_type_private" required></label><br>
+        <label>Work Type Self-Employed (0/1): <input type="number" id="work_type_self_employed" required></label><br>
+        <label>Work Type Children (0/1): <input type="number" id="work_type_children" required></label><br>
+        <label>Residence Type Urban (0/1): <input type="number" id="residence_type_urban" required></label><br>
+        <button type="submit">Predict Stroke Risk</button>
+    </form>
+    <div id="result"></div>
+</body>
+</html>
